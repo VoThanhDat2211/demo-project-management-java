@@ -11,13 +11,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.beans.Encoder;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private static final ModelMapper mapper = new ModelMapper();
     private final UserRepository userRepository;
@@ -34,6 +37,7 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("User already exists.");
         } else {
             User user = convertToUser(userDTO);
+            user.setPassword(new BCryptPasswordEncoder().encode(userDTO.getPassword()));
             userRepository.save(user);
         }
     }
@@ -44,9 +48,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
-                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
@@ -55,6 +59,7 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+
     private UserDTO convertToUserDTO(User user) {
         return mapper.map(user, UserDTO.class);
     }
@@ -62,4 +67,6 @@ public class UserServiceImpl implements UserService {
     private  User convertToUser(UserDTO userDTO) {
         return mapper.map(userDTO, User.class);
     }
+
+
 }

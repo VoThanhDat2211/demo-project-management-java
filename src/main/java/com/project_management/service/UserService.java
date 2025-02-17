@@ -6,9 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface UserService {
-    public void createUser(UserDTO userDTO) throws BadRequestException;
+     void createUser(UserDTO userDTO) throws BadRequestException;
 
-    public boolean existsUserByEmail(String email);
-
-    public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException;
+     boolean existsUserByEmail(String email);
 }

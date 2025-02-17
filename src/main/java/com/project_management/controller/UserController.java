@@ -21,24 +21,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/get-by-email")
-    public ResponseDTO<UserDTO>  getByEmail(@RequestParam String email) {
-        int code = HttpStatus.OK.value();
-        String message = "success";
-        UserDTO userDTO = this.userService.getByEmail(email);
-
-        if(userDTO == null){
-            message = "user not found";
-            code =  HttpStatus.NOT_FOUND.value();
-        }
-
-        return ResponseDTO.<UserDTO>builder()
-                .code(code)
-                .data(userDTO)
-                .message(message)
-                .build();
-    }
-
     @PostMapping("/create")
     public ResponseDTO<Void> createUser(@RequestBody @Valid UserDTO userDTO) throws BadRequestException {
         int code = HttpStatus.OK.value();

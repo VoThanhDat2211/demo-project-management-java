@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,6 +45,14 @@ public class GlobalExceptionHandler {
             AuthenticationCredentialsNotFoundException ex) {
         Map<String, String> errors = new HashMap<>();
         String errorMessage = ex.getMessage();
+        errors.put("error", errorMessage);
+        return new ResponseEntity<>(errors, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Map<String, String>> handleBadCredentialsException(BadCredentialsException ex) {
+        Map<String, String> errors = new HashMap<>();
+        String errorMessage = "Incorrect email or password";
         errors.put("error", errorMessage);
         return new ResponseEntity<>(errors, HttpStatus.UNAUTHORIZED);
     }
