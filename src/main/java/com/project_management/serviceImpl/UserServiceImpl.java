@@ -1,8 +1,10 @@
 package com.project_management.serviceImpl;
 
 import com.project_management.dto.UserDTO;
+import com.project_management.dto.UserRecord;
 import com.project_management.entity.User;
 import com.project_management.exception.BadRequestException;
+import com.project_management.repository.UserRecodeRepository;
 import com.project_management.repository.UserRepository;
 import com.project_management.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -24,9 +26,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private static final ModelMapper mapper = new ModelMapper();
     private final UserRepository userRepository;
+    private final UserRecodeRepository  userRecodeRepository;
 
-    public UserServiceImpl(UserRepository userRepository, MessageSource messageSource) {
+    public UserServiceImpl(UserRepository userRepository,
+                           UserRecodeRepository userRecodeRepository) {
         this.userRepository = userRepository;
+        this.userRecodeRepository = userRecodeRepository;
     }
 
     @Override
@@ -45,6 +50,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public boolean existsUserByEmail(String email) {
         return userRepository.existsUserByEmail(email);
+    }
+
+    @Override
+    public List<UserRecord> getAll() {
+        return userRecodeRepository.findAll();
     }
 
     @Override

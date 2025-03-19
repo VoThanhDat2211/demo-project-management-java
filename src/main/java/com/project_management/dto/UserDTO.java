@@ -12,18 +12,19 @@ import lombok.NoArgsConstructor;
 public class UserDTO {
     private int id;
 
-    @NotNull(message = "Email is required")
+    @NotBlank(message = "Email is required")
     @Size(max = 255, message = "Email cannot exceed 255 characters")
     @Email(message = "Email is invalid")
     @Column(unique = true)
     private String email;
 
-    @NotNull(message = "Password is required")
+
+    @NotBlank(message = "Password is required")
     @Size(max = 255, message = "Password cannot exceed 255 characters")
     @Pattern(regexp = "^.{6,}$", message = "Password must be at least 6 characters long")
     private String password;
 
-    @NotNull(message = "Role is required")
+    @NotBlank(message = "Role is required")
     @Size(max = 20, message = "Role cannot exceed 20 characters")
     private String role;
 }
